@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mines 踩地雷遊戲</title>
   <style>
-    /* basic layout */
+   
     body {
       background-color: #0f212e;
       color: #ffffff;
@@ -167,7 +167,7 @@
   </div>
 
 <script>
-  // 全域變數 (人類習慣寫法)
+  
   var balance = parseInt(localStorage.getItem('user_bal')) || 500;
   var isPlaying = false;
   var currentBet = 10;
@@ -190,7 +190,7 @@
 
   function handleRedeem() {
     var code = document.getElementById('promo-code').value.trim().toUpperCase();
-    console.log("嘗試兌換:", code); // 人類除錯殘留
+    console.log("嘗試兌換:", code); 
 
     if (!code) {
       alert('請輸入序號！');
@@ -241,7 +241,7 @@
     balance -= currentBet;
     updateUIBalance();
 
-    // 生成地圖 (結合了洗牌陣列，帶有部分 AI 痕跡)
+   
     mapArr = Array(25 - currentMines).fill(0).concat(Array(currentMines).fill(1));
     shuffle(mapArr);
 
@@ -258,7 +258,7 @@
     initBoard();
   }
 
-  // Fisher-Yates 洗牌 (人類常貼的現成演算法)
+
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -286,7 +286,7 @@
       targetBtn.innerText = '💎';
       openedCount++;
 
-      // 計算賠率 (傳統寫法)
+      // 計算賠率 
       currentRatio = 0.99;
       for (var k = 0; k < openedCount; k++) {
         currentRatio *= (25 - k) / (25 - currentMines - k);
