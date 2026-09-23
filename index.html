@@ -173,12 +173,12 @@
           <input type="number" id="betAmount" value="10" min="1">
         </div>
         <div class="input-group">
-          <label>地雷數量</label>
+          <label>地雷數量炸爛你</label>
           <input type="number" id="mineCount" value="3" min="1" max="24">
         </div>
       </div>
 
-      <button id="startBtn" class="action-btn" onclick="startGame()">開始遊戲</button>
+      <button id="startBtn" class="action-btn" onclick="startGame()">開始遊戲(敢不敢全丟!)</button>
       <button id="cashoutBtn" class="action-btn" onclick="cashout()">提現 ($<span id="cashoutAmount">0</span>)</button>
     </div>
   </div>
@@ -248,7 +248,7 @@
     mineCount = parseInt(document.getElementById('mineCount').value);
 
     if (isNaN(betAmount) || betAmount < 1) return alert('請輸入有效的下注金額');
-    if (betAmount > balance) return alert('代幣不足，請輸入序號兌換！');
+    if (betAmount > balance) return alert('窮逼代幣不足，請輸入序號兌換！');
     if (mineCount < 1 || mineCount > 24) return alert('地雷數量請設定在 1 到 24 之間');
 
     balance -= betAmount;
@@ -316,7 +316,7 @@
     const winAmount = Math.floor(betAmount * currentMultiplier);
     balance += winAmount;
     updateBalanceDisplay();
-    document.getElementById('statusMsg').innerText = `🎉 成功提現 $${winAmount}！`;
+    document.getElementById('statusMsg').innerText = `🎉 成功提現!你不敢全押 $${winAmount}！`;
     endGame(true);
   }
 
