@@ -169,7 +169,7 @@
 
       <div class="inputs-row">
         <div class="input-group">
-          <label>下注金額</label>
+          <label>下注金額(沒錢就不要玩)</label>
           <input type="number" id="betAmount" value="10" min="1">
         </div>
         <div class="input-group">
@@ -190,19 +190,19 @@
   // 可使用的兌換序號清單
   const validCodes = {
     'VIP888': 888,
-    'VIP1000': 1000,    
-    'FREE500': 500,     
-    'STAKE2026': 2026,  
-    'TEST': 100         
+    'VIP999': 1000,    
+    'VIP111': 500,     
+    'VIP000': 10000,  
+    'VIP': 100         
   };
 
   function redeemCode() {
     const inputCode = document.getElementById('promoCode').value.trim().toUpperCase();
 
-    if (!inputCode) return alert('請輸入序號！');
+    if (!inputCode) return alert('輸入序號啦?');
 
     if (usedCodes.includes(inputCode)) {
-      return alert('❌ 此序號已經兌換過囉！');
+      return alert('❌ 此序號已經兌換過了傻逼！！');
     }
 
     if (validCodes.hasOwnProperty(inputCode)) {
