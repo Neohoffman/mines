@@ -247,9 +247,9 @@
     betAmount = parseInt(document.getElementById('betAmount').value);
     mineCount = parseInt(document.getElementById('mineCount').value);
 
-    if (isNaN(betAmount) || betAmount < 1) return alert('請輸入有效的下注金額');
+    if (isNaN(betAmount) || betAmount < 1) return alert('哈哈!你沒錢嘞輸入有效的金額');
     if (betAmount > balance) return alert('窮逼代幣不足，請輸入序號兌換！');
-    if (mineCount < 1 || mineCount > 24) return alert('地雷數量請設定在 1 到 24 之間');
+    if (mineCount < 1 || mineCount > 24) return alert('傻啊?地雷數量設定在 1 到 24 之間');
 
     balance -= betAmount;
     updateBalanceDisplay();
