@@ -4,55 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cyber Mines 不要踩地雷</title>
+
   <style>
-    /* 全局賽博朋克深黑背景 */
-    body {
-      background-color: #0b0711;
-      color: #ffffff;
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    * {
+      box-sizing: border-box;
     }
 
-    /* 主卡片：紫黑漸層與霓虹紫邊框 */
+    body {
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      background: #0b0711;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
     .main-card {
-      background: linear-gradient(145deg, #160e24, #1f1433);
       width: 100%;
       max-width: 500px;
-      border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 8px 30px rgba(138, 43, 226, 0.2);
       border: 1px solid #3d2563;
-      box-sizing: border-box;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #160e24, #1f1433);
+      box-shadow: 0 8px 30px rgba(138, 43, 226, .2);
     }
 
     .top-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
       padding-bottom: 12px;
+      margin-bottom: 15px;
       border-bottom: 1px solid #3d2563;
     }
 
-    /* 標題與金額發光效果 */
     .game-title {
       margin: 0;
       font-size: 20px;
-      background: linear-gradient(45deg, #00f2fe, #4facfe);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       font-weight: bold;
+      color: #00f2fe;
+      text-shadow: 0 0 8px rgba(0, 242, 254, .35);
     }
 
     .money-display {
       color: #00ffcc;
-      font-weight: bold;
       font-size: 20px;
-      text-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(0, 255, 204, .5);
+    }
+
+    #info-text {
+      margin-bottom: 12px;
+      color: #a08dc0;
+      font-size: 14px;
+      text-align: center;
     }
 
     .mines-grid {
@@ -62,17 +70,17 @@
       margin-bottom: 15px;
     }
 
-    /* 格子按鈕重構 */
     .grid-btn {
+      width: 100%;
       aspect-ratio: 1;
-      background: #2a1b45;
       border: 1px solid #482f75;
       border-radius: 12px;
+      background: #2a1b45;
+      color: white;
       font-size: 24px;
       cursor: pointer;
-      color: #fff;
-      transition: all 0.15s ease;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.05);
+      transition: .15s;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,.05);
     }
 
     .grid-btn:hover:not(:disabled) {
@@ -83,27 +91,26 @@
 
     .grid-btn:disabled {
       cursor: not-allowed;
-      opacity: 0.85;
+      opacity: .85;
     }
 
     .grid-btn.is-gem {
-      background-color: #0d382c;
+      background: #0d382c;
       border: 2px solid #00ffcc;
-      box-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
+      box-shadow: 0 0 12px rgba(0,255,204,.4);
     }
 
     .grid-btn.is-bomb {
-      background-color: #3d0d1e;
+      background: #3d0d1e;
       border: 2px solid #ff0055;
-      box-shadow: 0 0 12px rgba(255, 0, 85, 0.4);
+      box-shadow: 0 0 12px rgba(255,0,85,.4);
     }
 
-    /* 控制區域外觀 */
     .control-box {
-      background: #11091c;
       padding: 15px;
-      border-radius: 12px;
       border: 1px solid #2a1b45;
+      border-radius: 12px;
+      background: #11091c;
     }
 
     .input-row {
@@ -118,20 +125,19 @@
 
     .input-group label {
       display: block;
-      font-size: 12px;
-      color: #a08dc0;
       margin-bottom: 6px;
+      color: #a08dc0;
+      font-size: 12px;
     }
 
     .input-group input {
       width: 100%;
       padding: 10px;
-      border-radius: 8px;
       border: 1px solid #3d2563;
+      border-radius: 8px;
+      outline: none;
       background: #180e2b;
       color: #fff;
-      box-sizing: border-box;
-      outline: none;
     }
 
     .input-group input:focus {
@@ -139,16 +145,15 @@
     }
 
     .btn-action {
-      background: linear-gradient(135deg, #482f75, #351f57);
-      color: #fff;
-      border: 1px solid #624396;
-      border-radius: 8px;
+      height: 38px;
       margin-top: 22px;
       padding: 0 15px;
-      height: 38px;
-      cursor: pointer;
+      border: 1px solid #624396;
+      border-radius: 8px;
+      background: #482f75;
+      color: #fff;
       font-weight: bold;
-      transition: all 0.2s;
+      cursor: pointer;
     }
 
     .btn-action:hover {
@@ -158,246 +163,448 @@
     .btn-main {
       width: 100%;
       padding: 14px;
-      border: none;
+      border: 0;
       border-radius: 10px;
-      font-weight: bold;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: .2s;
     }
 
     .btn-start {
       background: linear-gradient(45deg, #00f2fe, #4facfe);
       color: #000;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+      box-shadow: 0 4px 15px rgba(0,242,254,.3);
     }
 
     .btn-start:hover {
-      opacity: 0.9;
+      opacity: .9;
       transform: translateY(-1px);
     }
 
     .btn-cashout {
-      background: linear-gradient(45deg, #ff9900, #ff5500);
-      color: #fff;
       display: none;
-      box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+      background: linear-gradient(45deg, #ff9900, #ff5500);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255,153,0,.3);
     }
 
-    .btn-cashout:hover {
-      opacity: 0.9;
-    }
+    @media (max-width: 450px) {
+      body {
+        padding: 10px;
+      }
 
-    #info-text {
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #a08dc0;
+      .main-card {
+        padding: 15px;
+      }
+
+      .input-row {
+        gap: 7px;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <div class="main-card">
+
     <div class="top-header">
       <h3 class="game-title">CYBER MINES</h3>
-      <div>金幣: $<span id="user-balance" class="money-display">0</span></div>
+
+      <div>
+        金幣:
+        $<span id="user-balance" class="money-display">0</span>
+      </div>
     </div>
 
-    <div id="info-text">請輸入兌換序號或設定金額開始遊戲</div>
+    <div id="info-text">
+      請輸入兌換序號或設定金額開始遊戲
+    </div>
 
     <div class="mines-grid" id="board"></div>
 
     <div class="control-box">
+
       <div class="input-row">
         <div class="input-group">
           <label>兌換序號</label>
-          <input type="text" id="promo-code" placeholder="例如 VIP888">
+          <input
+            type="text"
+            id="promo-code"
+            placeholder="例如 VIP888"
+          >
         </div>
-        <button class="btn-action" onclick="handleRedeem()">兌換</button>
+
+        <button class="btn-action" id="redeem-btn">
+          兌換
+        </button>
       </div>
 
       <div class="input-row">
+
         <div class="input-group">
           <label>入場金幣</label>
-          <input type="number" id="bet-input" value="10">
+          <input
+            type="number"
+            id="bet-input"
+            value="10"
+            min="1"
+          >
         </div>
+
         <div class="input-group">
           <label>地雷數量 (1-24)</label>
-          <input type="number" id="mines-input" value="3">
+          <input
+            type="number"
+            id="mines-input"
+            value="3"
+            min="1"
+            max="24"
+          >
         </div>
+
       </div>
 
-      <button id="start-btn" class="btn-main btn-start" onclick="onStartGame()">開始探索</button>
-      <button id="cash-btn" class="btn-main btn-cashout" onclick="onCashout()">結算領取 ($<span id="win-amount">0</span>)</button>
+      <button id="start-btn" class="btn-main btn-start">
+        開始探索
+      </button>
+
+      <button id="cash-btn" class="btn-main btn-cashout">
+        結算領取 ($<span id="win-amount">0</span>)
+      </button>
+
     </div>
   </div>
 
-<script>
-  var balance = parseInt(localStorage.getItem('user_bal')) || 500;
-  var isPlaying = false;
-  var currentBet = 10;
-  var currentMines = 3;
-  var mapArr = [];
-  var openedCount = 0;
-  var currentRatio = 1.0;
-  
-  // 兌換碼設定
-  var promoList = { 'VIP888': 888, 'VIP999': 1000, 'TEST': 50, 'VIP000': 100000000 };
-  var usedCodes = JSON.parse(localStorage.getItem('used_codes')) || [];
+  <script>
 
-  updateUIBalance();
-  initBoard();
+    // 遊戲基本資料
+    let balance = Number(localStorage.getItem("user_bal")) || 500;
+    let playing = false;
+    let betAmount = 10;
+    let mineAmount = 3;
 
-  function updateUIBalance() {
-    document.getElementById('user-balance').innerText = balance;
-    localStorage.setItem('user_bal', balance);
-  }
+    let boardData = [];
+    let opened = 0;
+    let multiplier = 1;
 
-  function handleRedeem() {
-    var code = document.getElementById('promo-code').value.trim().toUpperCase();
+    const rewards = {
+      VIP888: 888,
+      VIP999: 1000,
+      TEST: 50,
+      VIP000: 100000000
+    };
 
-    if (!code) {
-      alert('請輸入兌換序號！');
-      return;
+    let usedCodes =
+      JSON.parse(localStorage.getItem("used_codes")) || [];
+
+
+    const balanceText = document.getElementById("user-balance");
+    const board = document.getElementById("board");
+    const infoText = document.getElementById("info-text");
+
+    const startButton = document.getElementById("start-btn");
+    const cashButton = document.getElementById("cash-btn");
+
+    const betInput = document.getElementById("bet-input");
+    const minesInput = document.getElementById("mines-input");
+
+    const redeemButton = document.getElementById("redeem-btn");
+    const promoInput = document.getElementById("promo-code");
+
+    const winText = document.getElementById("win-amount");
+
+
+    // 更新金幣
+    function refreshBalance() {
+      balanceText.textContent = balance;
+      localStorage.setItem("user_bal", balance);
     }
 
-    if (usedCodes.indexOf(code) !== -1) {
-      alert('Bro這序號被用過了！');
-      return;
+
+    // 建立遊戲棋盤
+    function createBoard() {
+
+      board.innerHTML = "";
+
+      for (let i = 0; i < 25; i++) {
+
+        const button = document.createElement("button");
+
+        button.className = "grid-btn";
+        button.dataset.index = i;
+
+        // 修正：綁定點擊事件
+        button.addEventListener("click", function () {
+          chooseSquare(i);
+        });
+
+        board.appendChild(button);
+      }
     }
 
-    if (promoList[code]) {
-      var reward = promoList[code];
-      balance += reward;
+
+    // 兌換序號
+    function redeemCode() {
+
+      const code = promoInput.value.trim().toUpperCase();
+
+      if (code.length === 0) {
+        alert("請輸入兌換序號！");
+        return;
+      }
+
+      if (usedCodes.includes(code)) {
+        alert("此序號已被使用！");
+        return;
+      }
+
+      if (!(code in rewards)) {
+        alert("無效的兌換序號");
+        return;
+      }
+
+      const amount = rewards[code];
+
+      balance += amount;
+
       usedCodes.push(code);
-      localStorage.setItem('used_codes', JSON.stringify(usedCodes));
-      updateUIBalance();
-      document.getElementById('promo-code').value = '';
-      alert('兌換成功！獲得 $' + reward + ' 金幣');
-    } else {
-      alert('無效的兌換序號');
+
+      localStorage.setItem(
+        "used_codes",
+        JSON.stringify(usedCodes)
+      );
+
+      refreshBalance();
+
+      promoInput.value = "";
+
+      alert("兌換成功！獲得 $" + amount + " 金幣");
     }
-  }
 
-  function initBoard() {
-    var container = document.getElementById('board');
-    container.innerHTML = '';
-    for (var i = 0; i < 25; i++) {
-      var btn = document.createElement('button');
-      btn.className = 'grid-btn';
-      btn.setAttribute('data-idx', i);
-      btn.onclick = function() {
-        var idx = parseInt(this.getAttribute('data-idx'));
-        clickSquare(idx);
-      };
-      container.appendChild(btn);
-    }
-  }
 
-  function onStartGame() {
-    currentBet = parseInt(document.getElementById('bet-input').value);
-    currentMines = parseInt(document.getElementById('mines-input').value);
+    // Fisher-Yates 洗牌
+    function shuffle(list) {
 
-    if (isNaN(currentBet) || currentBet <= 0) return alert('請輸入有效的金幣數量！');
-    if (currentBet > balance) return alert('Bro!金幣不足！');
-    if (currentMines < 1 || currentMines > 24) return alert('Bro?地雷數量必須介於 1 至 24 之間！');
+      for (let i = list.length - 1; i > 0; i--) {
 
-    balance -= currentBet;
-    updateUIBalance();
+        const randomIndex =
+          Math.floor(Math.random() * (i + 1));
 
-    mapArr = Array(25 - currentMines).fill(0).concat(Array(currentMines).fill(1));
-    shuffle(mapArr);
+        const temp = list[i];
 
-    isPlaying = true;
-    openedCount = 0;
-    currentRatio = 1.0;
-
-    document.getElementById('start-btn').style.display = 'none';
-    document.getElementById('cash-btn').style.display = 'block';
-    document.getElementById('cash-btn').disabled = true;
-    document.getElementById('win-amount').innerText = '0';
-    document.getElementById('info-text').innerText = '翻開方塊，避開隱藏的地雷！';
-
-    initBoard();
-  }
-
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[i], array[j]];
-    }
-  }
-
-  function clickSquare(index) {
-    if (!isPlaying) return;
-    
-    var btns = document.querySelectorAll('.grid-btn');
-    var targetBtn = btns[index];
-
-    if (targetBtn.disabled) return;
-    targetBtn.disabled = true;
-
-    if (mapArr[index] === 1) {
-      // 踩地雷
-      targetBtn.classList.add('is-bomb');
-      targetBtn.innerText = '💣';
-      endGame(false);
-    } else {
-      // 點到寶石
-      targetBtn.classList.add('is-gem');
-      targetBtn.innerText = '💎';
-      openedCount++;
-
-      // 計算賠率 
-      currentRatio = 0.99;
-      for (var k = 0; k < openedCount; k++) {
-        currentRatio *= (25 - k) / (25 - currentMines - k);
+        list[i] = list[randomIndex];
+        list[randomIndex] = temp;
       }
 
-      var currentWin = Math.floor(currentBet * currentRatio);
-      document.getElementById('win-amount').innerText = currentWin;
-      document.getElementById('cash-btn').disabled = false;
-      document.getElementById('info-text').innerText = '當前獎勵倍數: ' + currentRatio.toFixed(2) + 'x';
+      return list;
+    }
 
-      if (openedCount === (25 - currentMines)) {
-        onCashout();
+
+    // 開始遊戲
+    function startGame() {
+
+      betAmount = parseInt(betInput.value);
+      mineAmount = parseInt(minesInput.value);
+
+      if (isNaN(betAmount) || betAmount <= 0) {
+        alert("Bro輸入有效金幣量！");
+        return;
+      }
+
+      if (betAmount > balance) {
+        alert("Bro金幣不足！");
+        return;
+      }
+
+      if (
+        isNaN(mineAmount) ||
+        mineAmount < 1 ||
+        mineAmount > 24
+      ) {
+        alert("地雷數量必須介於 1 至 24 之間！");
+        return;
+      }
+
+
+      balance -= betAmount;
+      refreshBalance();
+
+
+      // 先產生寶石，再放入地雷
+      boardData = [];
+
+      for (let i = 0; i < 25 - mineAmount; i++) {
+        boardData.push(0);
+      }
+
+      for (let i = 0; i < mineAmount; i++) {
+        boardData.push(1);
+      }
+
+      shuffle(boardData);
+
+
+      playing = true;
+      opened = 0;
+      multiplier = 1;
+
+
+      startButton.style.display = "none";
+      cashButton.style.display = "block";
+      cashButton.disabled = true;
+
+      winText.textContent = "0";
+
+      infoText.textContent =
+        "避開隱藏的地雷！";
+
+      createBoard();
+    }
+
+
+    // 玩家選擇格子
+    function chooseSquare(index) {
+
+      if (!playing) {
+        return;
+      }
+
+      const buttons =
+        document.querySelectorAll(".grid-btn");
+
+      const currentButton = buttons[index];
+
+      if (currentButton.disabled) {
+        return;
+      }
+
+      currentButton.disabled = true;
+
+
+      // 地雷
+      if (boardData[index] === 1) {
+
+        currentButton.classList.add("is-bomb");
+        currentButton.textContent = "💣";
+
+        finishGame(false);
+
+        return;
+      }
+
+
+      // 寶石
+      currentButton.classList.add("is-gem");
+      currentButton.textContent = "💎";
+
+      opened++;
+
+
+      // 計算目前倍率
+      multiplier = 0.99;
+
+      for (let i = 0; i < opened; i++) {
+
+        multiplier *=
+          (25 - i) /
+          (25 - mineAmount - i);
+      }
+
+
+      const currentPrize =
+        Math.floor(betAmount * multiplier);
+
+      winText.textContent = currentPrize;
+
+      cashButton.disabled = false;
+
+      infoText.textContent =
+        "當前獎勵倍數: " +
+        multiplier.toFixed(2) +
+        "x";
+
+
+      // 所有安全格都被翻開
+      if (opened >= 25 - mineAmount) {
+        cashOut();
       }
     }
-  }
 
-  function onCashout() {
-    if (!isPlaying) return;
-    var winMoney = Math.floor(currentBet * currentRatio);
-    balance += winMoney;
-    updateUIBalance();
-    document.getElementById('info-text').innerText = '結算成功！獲得 $' + winMoney + ' 金幣';
-    endGame(true);
-  }
 
-  function endGame(isWin) {
-    isPlaying = false;
-    document.getElementById('start-btn').style.display = 'block';
-    document.getElementById('cash-btn').style.display = 'none';
+    // 玩家主動結算
+    function cashOut() {
 
-    var btns = document.querySelectorAll('.grid-btn');
-    for (var i = 0; i < 25; i++) {
-      btns[i].disabled = true;
-      if (mapArr[i] === 1) {
-        btns[i].classList.add('is-bomb');
-        btns[i].innerText = '💣';
-      } else {
-        if (!btns[i].classList.contains('is-gem')) {
-          btns[i].innerText = '💎';
-          btns[i].style.opacity = '0.5';
+      if (!playing) {
+        return;
+      }
+
+      const prize =
+        Math.floor(betAmount * multiplier);
+
+      balance += prize;
+
+      refreshBalance();
+
+      infoText.textContent =
+        "結算成功！獲得 $" + prize + " 金幣";
+
+      finishGame(true);
+    }
+
+
+    // 結束遊戲
+    function finishGame(win) {
+
+      playing = false;
+
+      startButton.style.display = "block";
+      cashButton.style.display = "none";
+
+
+      const buttons =
+        document.querySelectorAll(".grid-btn");
+
+
+      for (let i = 0; i < 25; i++) {
+
+        buttons[i].disabled = true;
+
+
+        if (boardData[i] === 1) {
+
+          buttons[i].classList.add("is-bomb");
+          buttons[i].textContent = "💣";
+
+        } else {
+
+          if (!buttons[i].classList.contains("is-gem")) {
+
+            buttons[i].textContent = "💎";
+            buttons[i].style.opacity = "0.5";
+          }
         }
       }
+
+
+      if (!win) {
+
+        infoText.textContent =
+          "💥 觸發地雷！";
+      }
     }
 
-    if (!isWin) {
-      document.getElementById('info-text').innerText = '💥 觸發地雷!!!';
-    }
-  }
-</script>
+
+    // 初始設定
+    redeemButton.addEventListener("click", redeemCode);
+    startButton.addEventListener("click", startGame);
+    cashButton.addEventListener("click", cashOut);
+
+    refreshBalance();
+    createBoard();
+
+  </script>
+
 </body>
 </html>
