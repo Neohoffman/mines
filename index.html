@@ -2,7 +2,8 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 1. 在 viewport 禁用使用者手勢縮放 (user-scalable=no) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cyber Mines 不要踩地雷</title>
 
   <style>
@@ -20,6 +21,8 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      /* 2. 禁止雙擊放大並取消點擊延遲 */
+      touch-action: manipulation;
     }
 
     .main-card {
@@ -81,6 +84,8 @@
       cursor: pointer;
       transition: .15s;
       box-shadow: inset 0 2px 4px rgba(255,255,255,.05);
+      /* 禁止格子按鈕雙擊放大 */
+      touch-action: manipulation;
     }
 
     .grid-btn:hover:not(:disabled) {
@@ -154,6 +159,7 @@
       color: #fff;
       font-weight: bold;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .btn-action:hover {
@@ -169,6 +175,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: .2s;
+      touch-action: manipulation;
     }
 
     .btn-start {
@@ -182,8 +189,26 @@
       transform: translateY(-1px);
     }
 
-    .btn-cashout {
+    /* 遊戲進行中的按鈕容器 */
+    .btn-group-game {
       display: none;
+      gap: 10px;
+    }
+
+    /* 隨機選格按鈕樣式 */
+    .btn-random {
+      flex: 1;
+      background: linear-gradient(45deg, #a855f7, #6366f1);
+      color: white;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, .3);
+    }
+
+    .btn-random:hover {
+      opacity: .9;
+    }
+
+    .btn-cashout {
+      flex: 2;
       background: linear-gradient(45deg, #ff9900, #ff5500);
       color: white;
       box-shadow: 0 4px 15px rgba(255,153,0,.3);
@@ -270,9 +295,15 @@
         開始探索
       </button>
 
-      <button id="cash-btn" class="btn-main btn-cashout">
-        結算領取 ($<span id="win-amount">0</span>)
-      </button>
+      <!-- 遊戲中的控制區：隨機抽取 + 結算領取 -->
+      <div id="game-btns" class="btn-group-game">
+        <button id="random-btn" class="btn-main btn-random">
+          🎲 隨機抽取
+        </button>
+        <button id="cash-btn" class="btn-main btn-cashout">
+          結算領取 ($<span id="win-amount">0</span>)
+        </button>
+      </div>
 
     </div>
   </div>
@@ -305,6 +336,8 @@
     const infoText = document.getElementById("info-text");
 
     const startButton = document.getElementById("start-btn");
+    const gameBtnsGroup = document.getElementById("game-btns");
+    const randomButton = document.getElementById("random-btn");
     const cashButton = document.getElementById("cash-btn");
 
     const betInput = document.getElementById("bet-input");
@@ -335,7 +368,7 @@
         button.className = "grid-btn";
         button.dataset.index = i;
 
-        // 修正：綁定點擊事件
+        // 綁定點擊事件
         button.addEventListener("click", function () {
           chooseSquare(i);
         });
@@ -452,7 +485,7 @@
 
 
       startButton.style.display = "none";
-      cashButton.style.display = "block";
+      gameBtnsGroup.style.display = "flex"; // 顯示「隨機抽取」與「結算領取」
       cashButton.disabled = true;
 
       winText.textContent = "0";
@@ -461,6 +494,23 @@
         "避開隱藏的地雷！";
 
       createBoard();
+    }
+
+
+    // 隨機抽取格子的邏輯
+    function selectRandomSquare() {
+      if (!playing) return;
+
+      const buttons = Array.from(document.querySelectorAll(".grid-btn"));
+      // 找出所有尚未翻開（未被 disabled）的格子索引
+      const availableIndices = buttons
+        .map((btn, idx) => (btn.disabled ? null : idx))
+        .filter(idx => idx !== null);
+
+      if (availableIndices.length > 0) {
+        const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+        chooseSquare(randomIndex);
+      }
     }
 
 
@@ -560,7 +610,7 @@
       playing = false;
 
       startButton.style.display = "block";
-      cashButton.style.display = "none";
+      gameBtnsGroup.style.display = "none"; // 隱藏遊戲中的按鈕
 
 
       const buttons =
@@ -596,9 +646,10 @@
     }
 
 
-    // 初始設定
+    // 初始設定與事件綁定
     redeemButton.addEventListener("click", redeemCode);
     startButton.addEventListener("click", startGame);
+    randomButton.addEventListener("click", selectRandomSquare);
     cashButton.addEventListener("click", cashOut);
 
     refreshBalance();
